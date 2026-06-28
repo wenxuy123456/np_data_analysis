@@ -1,0 +1,128 @@
+from matplotlib import pyplot as plt
+from scipy.optimize import curve_fit
+import numpy as np
+import pandas as pd
+
+input_file ='np_dataset_analysis.xlsx'
+fig5_file_list = [
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4M2.4_hh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4M2.4_hl.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4M2.4_lh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4M5.3_hh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4M5.3_hl.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4M5.3_lh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4420_hh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4420_hl.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_4420_lh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_biotin_hh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_biotin_hl.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_biotin_lh.xlsx",
+    r"..\web_plot_data\np_detachment_fig5\np_detachment_fig5_biotin_ll.xlsx",
+]
+
+##Organize fig5 data into a sorted dataframe
+def process_fig5_file(file):
+    df = pd.read_excel(file, header = None, names = ["simulation time", "bound particles"])
+    print(df.head())
+    df.loc[df["simulation time"] < 0, "simulation time"] = 0
+    df.loc[df["bound particles"] < 0, "bound particles"] = 0
+    df = df[df["simulation time"] < 700]
+    df_sorted = df.sort_values(by="simulation time", ascending=True).reset_index(drop=True)
+    df_sorted.insert(0, "renumbered", range(1, len(df_sorted) +1))
+    df_sorted.to_excel(output_file, index=False)
+
+    return df_sorted
+    
+def fig5_sorted_df():
+    all_conformations = {}
+    for file in fig5_file_list:
+        all_conformations[file] = process_fig5_file(file)
+    return all_conformations
+
+##Find curve for each fig5 dataset
+def plot_fig5_decay_curve(df_sorted_fig5):
+
+    x = df_sorted_fig5["simulation time"]
+    y = df_sorted_fig5["bound particles"]
+
+    params, __ = curve_fit(
+        decay_curve,
+        x,
+        y,
+        p0 = [0.01, 0.5],
+        bounds = ([0, 0], [np.inf, 100])
+    )
+
+    kD, beta = params
+
+    x_fit = np.linspace(x.min(), x.max(), 500)
+    y_fit = decay_curve(x_fit, kD, beta)
+
+    plt.plot(x_fit, y_fit, label=f"Best Fit line (kD = {kD:.4f}, β = {beta:.4f})")
+    return kD, beta
+
+
+
+##Organize original detachment data
+df = pd.read_excel(input_file)
+print(df.head())
+
+output_file= "np_sorted_file.xlsx"
+df_sorted = df.sort_values(by="simulation time", ascending=True).reset_index(drop=True)
+df_sorted = df_sorted[df_sorted["simulation time"] < 600]
+df_sorted.insert(0, "renumbered", range(1, len(df_sorted) +1))
+df_sorted.to_excel(output_file, index=False)
+
+B0 = len(df_sorted["renumbered"])
+df_sorted["numbers detached"] = range(1, B0+1)
+df_sorted["bound particles"] = (B0 - df_sorted["numbers detached"]) / B0 * 100
+
+##Scatter experimental data
+def plot_np_dataset_scatter():
+    x = df_sorted["simulation time"]
+    y = df_sorted["bound particles"]
+    plt.scatter(x,y,label="NP Detachment Curve", color="red",s=1)
+    plt.title("NP Dataset")
+    plt.xlabel("Detachment Time")
+    plt.ylabel("Bound Particles Percentage (%)")
+
+##Original decay curve equation
+def decay_curve(t, kD, beta):
+    return np.exp(kD * (t ** beta) / (beta - 1)) * 100
+
+##Find best fit curve
+def plot_decay_curve():
+
+    x = df_sorted["simulation time"]
+    y = df_sorted["bound particles"]
+
+    params, __ = curve_fit(
+        decay_curve,
+        x,
+        y,
+        p0 = [0.01, 0],
+        bounds = ([0, 0], [np.inf, 100])
+    )
+
+    kD, beta = params
+
+    x_fit = np.linspace(x.min(), x.max(), 500)
+    y_fit = np.exp(kD * (x_fit ** beta) / (beta - 1)) * 100 
+    
+    plt.plot(x_fit, y_fit, color="blue", label=f"Best Fit line (kD = {kD:.4f}, β = {beta:.4f})")
+    return kD, beta
+
+
+def main():
+    plot_np_dataset_scatter()
+    plot_decay_curve()
+
+    all_fig5_data = fig5_sorted_df()
+    for file, df_sorted_fig5 in all_fig5_data.items():
+        plot_fig5_decay_curve(df_sorted_fig5)
+
+    plt.legend(loc="best")
+    plt.show()
+
+if __name__ == "__main__":
+    main()
