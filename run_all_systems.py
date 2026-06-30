@@ -1,6 +1,7 @@
+import os
+
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "np_attachment"))
 
-import os
 import matplotlib
 
 if os.environ.get("CI"):
