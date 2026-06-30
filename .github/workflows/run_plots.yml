@@ -22,7 +22,7 @@ jobs:
 
       - name: Run analysis
         working-directory: np_attachment
-        run: python ../run_all_systems.py
+        run: python ../run_all_attachment.py
 
       - name: Commit generated plots
         run: |

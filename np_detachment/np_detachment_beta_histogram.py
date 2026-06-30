@@ -78,25 +78,25 @@ def bootstrap_bounds(df_sorted, random_state=None):
     print(beta_lower, beta_upper, kD_lower, kD_upper)
     return beta_values, kD_values
 
-##Bootstrap kD histogram
-def plot_bootstrap_kD_histogram(kD_values):
-    plt.hist(kD_values, bins=30, color="lightblue", edgecolor="black")
-    plt.title("Bootstrap kD Histogram")
-    plt.xlabel("kD Values")
-    plt.ylabel("Number of kD Values")
-    plt.axvline(np.mean(kD_values), color='red', linestyle='dashed', linewidth=1, label=f"Mean kD = {np.mean(kD_values):.4f}")
+##Bootstrap beta histogram
+def plot_bootstrap_beta_histogram(beta_values):
+    plt.hist(beta_values, bins=30, color="lightgreen", edgecolor="black")
+    plt.title("Bootstrap β Histogram")
+    plt.xlabel("β Values")
+    plt.ylabel("Number of β Values")
+    plt.axvline(np.mean(beta_values), color='red', linestyle='dashed', linewidth=1, label=f"Mean β = {np.mean(beta_values):.4f}")
     plt.legend()
 
 def main():
     beta_values, kD_values = bootstrap_bounds(df_sorted)
 
     plt.figure()
-    plot_bootstrap_kD_histogram(beta_values)  # NOTE: passing beta_values here, see flag above
+    plot_bootstrap_beta_histogram(beta_values)
 
     plt.legend(loc="best")
 
     os.makedirs(os.path.join(script_dir, "outputs"), exist_ok=True)
-    plt.savefig(os.path.join(script_dir, "outputs", "bootstrap_kD_histogram.png"), dpi=150, bbox_inches="tight")
+    plt.savefig(os.path.join(script_dir, "outputs", "bootstrap_beta_histogram.png"), dpi=150, bbox_inches="tight")
 
     if not os.environ.get("CI"):
         plt.show()
