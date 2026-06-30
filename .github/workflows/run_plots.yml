@@ -24,7 +24,7 @@ jobs:
         working-directory: np_attachment
         run: python ../run_all_systems.py
 
-      - - name: Commit generated plots
+      - name: Commit generated plots
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
