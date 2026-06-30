@@ -13,7 +13,6 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 
 input_file = os.path.join(script_dir, 'np_dataset_analysis.xlsx')
 df = pd.read_excel(input_file)
-print(df.head())
 
 output_file = os.path.join(script_dir, "np_sorted_file.xlsx")
 df_sorted = df.sort_values(by="simulation time", ascending=True).reset_index(drop=True)
@@ -25,12 +24,12 @@ B0 = len(df_sorted["renumbered"])
 df_sorted["numbers detached"] = range(1, B0 + 1)
 df_sorted["bound particles"] = (B0 - df_sorted["numbers detached"]) / B0 * 100
 
-##Original decay curve equation
+# Original decay curve equation
 def decay_curve(t, kD, beta):
     return np.exp(kD * (t ** beta) / (beta - 1)) * 100
 
 
-##Bootstrap curve
+# Bootstrap curve
 def bootstrap_bound_particles(time):
     B0 = len(time)
     unique_times, counts = np.unique(np.array(time), return_counts=True)
@@ -51,7 +50,7 @@ def bootstrap_beta(x, y):
     kD, beta = params
     return kD, beta
 
-##Bootstrap resampling
+# Bootstrap resampling
 def bootstrap_bounds(df_sorted, random_state=None):
     n_resamples = 1000
     rng = np.random.default_rng(random_state)
@@ -75,27 +74,33 @@ def bootstrap_bounds(df_sorted, random_state=None):
     beta_lower = np.percentile(beta_values, 2.5)
     beta_upper = np.percentile(beta_values, 97.5)
 
-    print(beta_lower, beta_upper, kD_lower, kD_upper)
     return beta_values, kD_values
 
-##Bootstrap kD histogram
-def plot_bootstrap_kD_histogram(kD_values):
-    plt.hist(kD_values, bins=30, color="lightblue", edgecolor="black")
-    plt.title("Bootstrap kD Histogram")
-    plt.xlabel("kD Values")
-    plt.ylabel("Number of kD Values")
-    plt.axvline(np.mean(kD_values), color='red', linestyle='dashed', linewidth=1, label=f"Mean kD = {np.mean(kD_values):.4f}")
-    plt.legend()
+# Bootstrap kD histogram
+def plot_bootstrap_kD_histogram(ax, kD_values):
+    ax.hist(kD_values, bins=30, color="#3a6fd8", edgecolor="white", alpha=0.85)
+    ax.set_xlabel(r"$k_D$", fontsize=12)
+    ax.set_ylabel("Count", fontsize=12)
+    ax.axvline(
+        np.mean(kD_values),
+        color="#c98a3e",
+        linestyle="--",
+        linewidth=1.5,
+        label=f"Mean $k_D$ = {np.mean(kD_values):.4f}",
+    )
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.legend(loc="best", frameon=True)
 
 def main():
     beta_values, kD_values = bootstrap_bounds(df_sorted)
 
-    plt.figure()
-    plot_bootstrap_kD_histogram(kD_values)
-
-    plt.legend(loc="best")
-
     os.makedirs(os.path.join(script_dir, "outputs"), exist_ok=True)
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    plot_bootstrap_kD_histogram(ax, kD_values)
+
+    plt.tight_layout()
     plt.savefig(os.path.join(script_dir, "outputs", "bootstrap_kD_histogram.png"), dpi=150, bbox_inches="tight")
 
     if not os.environ.get("CI"):
