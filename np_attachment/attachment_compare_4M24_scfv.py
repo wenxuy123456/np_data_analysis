@@ -55,15 +55,16 @@ def plot_attach_curve():
     plt.plot(x_fit, y_fit, color="blue", label=f"Best Fit line (k_a = {k_a:.4f}, box_height = {box_height:.2f}, N_max = {N_max:.2f})")
     return k_a, box_height, N_max
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+fig3_dir = os.path.join(script_dir, "..", "web_plot_data", "np_attachment_fig3")
 fig3_file_list = [
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_hh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_hm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_hl.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_mh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_mm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_lm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_4M2.4_scfv_lh.xlsx",
-
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_hh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_hm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_hl.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_mh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_mm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_ml.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_lh.xlsx"),
 ]
 
 ##Organize fig3 data into a sorted dataframe
