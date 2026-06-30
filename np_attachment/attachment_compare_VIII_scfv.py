@@ -56,14 +56,15 @@ def plot_attach_curve():
     return k_a, box_height, N_max
 
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+fig3_dir = os.path.join(script_dir, "..", "web_plot_data", "np_attachment_fig3")
 fig3_file_list = [
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_VIII_scfv_lh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_VIII_scfv_mm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_VIII_scfv_mh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_VIII_scfv_hm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_VIII_scfv_hh.xlsx",
+    os.path.join(fig3_dir, "np_attachment_fig3_VIII_scfv_lh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_VIII_scfv_mm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_VIII_scfv_mh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_VIII_scfv_hm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_VIII_scfv_hh.xlsx"),
 ]
-
 ##Organize fig3 data into a sorted dataframe
 def process_fig3_file(file):
     df = pd.read_excel(file, header=None, names=["simulation time", "bound particles"])
