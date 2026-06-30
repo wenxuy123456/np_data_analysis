@@ -1,3 +1,11 @@
+import os
+
+import matplotlib
+matplotlib.use("Agg")
+
+if os.environ.get("CI"):
+    matplotlib.use("Agg")
+
 from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 import numpy as np
@@ -64,7 +72,15 @@ def main():
     plot_attach_curve_optimized(1, 30, 100)
 
     plt.legend(loc="best")
-    plt.show()
+
+    os.makedirs("outputs", exist_ok=True)
+    plt.savefig(f"outputs/np_attachment_analysis.png", dpi=150, bbox_inches="tight")
+
+    if not os.environ.get("CI"):
+        plt.show()
+    else:
+        plt.close()
+
 
 if __name__ == "__main__":
     main()

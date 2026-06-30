@@ -1,8 +1,14 @@
+import os
+import matplotlib
+matplotlib.use("Agg")
+
+if os.environ.get("CI"):
+    matplotlib.use("Agg")
+
 from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 import numpy as np
 import pandas as pd
-import os
 
 input_file = 'np_dataset_attachment.csv'
 df = pd.read_csv(input_file)
@@ -100,22 +106,29 @@ def main():
     all_fig3_data = fig3_sorted_df()
     for file, df_sorted_fig3 in all_fig3_data.items():
         label = os.path.basename(file).replace(".xlsx", "").split("_")[-1]
+
+        plt.figure()
         plot_fig3_attachment_curve(df_sorted_fig3, label)
 
-    plt.title("Attachment Curves VIII scFv")
-    plt.xlabel("Time")
-    plt.ylabel("Bound Particles")
-    plt.legend(loc="best")
-    
-    plot_np_dataset_scatter()
-    plot_attach_curve()
+        plt.title("Attachment Curves 4M2.4 scFv")
+        plt.xlabel("Time")
+        plt.ylabel("Bound Particles")
+        plt.legend(loc="best")
 
+        plot_np_dataset_scatter()
+        plot_attach_curve()
 
-    plt.xlim(0, df_sorted["formed_time"].max())
+        plt.xlim(0, df_sorted["formed_time"].max())
 
+        plt.legend(loc="best", fontsize="small")
 
-    plt.legend(loc="best", fontsize="small")    
-    plt.show()
+        os.makedirs("outputs", exist_ok=True)
+        plt.savefig(f"outputs/VIII_scfv_{label}.png", dpi=150, bbox_inches="tight")
+
+        if not os.environ.get("CI"):
+            plt.show()
+        else:
+            plt.close()
 
 if __name__ == "__main__":
     main()
