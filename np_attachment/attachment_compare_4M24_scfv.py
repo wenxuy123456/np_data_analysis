@@ -63,7 +63,6 @@ fig3_file_list = [
     os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_hl.xlsx"),
     os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_mh.xlsx"),
     os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_mm.xlsx"),
-    os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_ml.xlsx"),
     os.path.join(fig3_dir, "np_attachment_fig3_4M2.4_scfv_lh.xlsx"),
 ]
 
