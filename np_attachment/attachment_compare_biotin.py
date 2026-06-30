@@ -55,18 +55,20 @@ def plot_attach_curve():
     plt.plot(x_fit, y_fit, color="blue", label=f"Best Fit line (k_a = {k_a:.4f}, box_height = {box_height:.2f}, N_max = {N_max:.2f})")
     return k_a, box_height, N_max
 
-fig3_file_list = [    
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_lwl.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_lwh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_ll.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_lm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_lh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_ml.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_mm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_mh.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_hl.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_hm.xlsx",
-    r"..\web_plot_data/np_attachment_fig3/np_attachment_fig3_biotin_hh.xlsx",
+script_dir = os.path.dirname(os.path.abspath(__file__))
+fig3_dir = os.path.join(script_dir, "..", "web_plot_data", "np_attachment_fig3")
+fig3_file_list = [
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_lwl.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_lwh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_ll.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_lm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_lh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_ml.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_mm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_mh.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_hl.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_hm.xlsx"),
+    os.path.join(fig3_dir, "np_attachment_fig3_biotin_hh.xlsx"),
 ]
 
 ##Organize fig3 data into a sorted dataframe

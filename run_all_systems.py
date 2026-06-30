@@ -1,7 +1,4 @@
 import os
-
-os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "np_attachment"))
-
 import matplotlib
 
 if os.environ.get("CI"):
@@ -10,8 +7,7 @@ if os.environ.get("CI"):
 import sys
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "np_attachment"))
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "np_attachment"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "np_attachment"))
 
 import attachment_compare_4M24_scfv as system_4M24
 import attachment_compare_4M53_scfv as system_4M53
